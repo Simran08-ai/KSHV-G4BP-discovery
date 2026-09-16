@@ -1,84 +1,72 @@
-# Genomic Search Proposal: AI-Driven G4–G4BP Discovery in KSHV
+# AI-Driven G4–G4BP Discovery in KSHV
 
-Submission-ready project folder — everything produced for this project,
-organized by process, with the environment needed to reproduce or extend
-any of it.
+A computational pipeline that uses **ANKH protein language-model embeddings** to identify novel nucleolin-like RNA G-quadruplex binding protein (RG4BP) candidates from QuadRAtlas data.
 
-## Directory guide
+The core idea: nucleolin is a well-characterised RG4-binding protein. By embedding proteins with ANKH and ranking them by similarity to nucleolin, we surface previously unannotated candidates worth investigating — with **ANKRD11** emerging as the top novel hit.
+
+---
+
+## What's in this repo
 
 | Folder | Contents |
-|---|---|
-| `00_source_material/` | The original 227-page source PDF everything here is built from |
-| `01_diagrams/` | The 3 scientific diagrams (RG4/RG4BP biology, docking pipeline, ANKH pipeline) + the scripts that generate them |
-| `02_ankh_full_dataset_pipeline/` | The full-QuadRAtlas-dataset ANKH validation script — ready to run, needs an internet-connected environment (see its `README.md`) |
-| `03_deliverable_documents/` | The finished slide deck and Word summary document, ready to submit or present, plus their generator scripts |
-| `docs/PROJECT_LOG.md` | Narrative history: what was done, in order, tying every folder together |
+|--------|----------|
+| `02_ankh_full_dataset_pipeline/` | The main pipeline — parsing QuadRAtlas, building the gene table, running ANKH embeddings + similarity scoring across the full dataset. Includes scripts, a small data export, and results. |
+| `03_deliverable_documents/` | The finished write-up (Word summary) and the generator scripts that build it. |
 
-Start with `docs/PROJECT_LOG.md` for the full story, or jump straight to
-`03_deliverable_documents/` for the two finished deliverables.
+Top-level files: `environment.yml`, `requirements.txt`, `setup.sh` (environment setup) and this README.
 
-## Environment setup
+---
 
-Two ways to get set up, pick one:
+## The pipeline
 
-### Option A — one command (recommended)
+Inside `02_ankh_full_dataset_pipeline/`:
 
+- **`parse_pg_dump.py`** — parses the QuadRAtlas database dump into usable tables
+- **`build_gene_table.py`** — assembles the gene-level table the pipeline runs on
+- **`run_ankh_full_quadratlas.py`** — the main script: generates ANKH embeddings, embeds nucleolin as the reference, and ranks all candidates by cosine similarity
+
+**`data/`** holds a small QuadRAtlas export (`quadratlas_export.csv`). The full raw database dump and the cached embeddings are **not included** here (they're large and re-generable) — see `data/README.md` for how to obtain / rebuild them.
+
+**`results/`** holds the output:
+- `ankh_quadratlas_full_results.csv` — full similarity-ranked candidate table
+- `ankh_vs_quadratlas_scatter.png` — visualisation of the results
+
+---
+
+## Key result
+
+| Candidate | Cosine similarity to nucleolin | Note |
+|-----------|-------------------------------|------|
+| **ANKRD11** | 0.724 | Top novel candidate (+81% over GAPDH control) |
+| SEPTIN9 | 0.687 | |
+| FN1 | 0.580 | |
+
+---
+
+## Setup
+
+Two ways to set up the environment — pick one:
+
+**Option A — conda (recommended)**
 ```bash
-chmod +x setup.sh   # if it isn't already
-./setup.sh
-```
-
-Creates a Python virtual environment (`.venv`) with everything needed for
-the diagrams and (on a machine with internet) the ANKH pipeline, and
-installs the Node packages needed to regenerate the deck/doc.
-
-### Option B — manual
-
-```bash
-# Python (venv)
-python3 -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
-
-# — or, if you use conda instead —
 conda env create -f environment.yml
-conda activate kshv-g4-discovery
-
-# Node (only needed to regenerate the docx/pptx from their generator scripts)
-npm install
 ```
 
-## What needs internet, what doesn't
-
-| Process | Needs internet? |
-|---|---|
-| Regenerating the 3 diagrams (`01_diagrams/`) | No |
-| Regenerating the docx/pptx (`03_deliverable_documents/generators/`) | No |
-| Running the full ANKH-vs-QuadRAtlas pipeline (`02_ankh_full_dataset_pipeline/`) | **Yes** — QuadRAtlas, UniProt, and HuggingFace (model weights). See that folder's README for a manual data-export step and a Google Colab walkthrough |
-
-## Quick start
-
+**Option B — pip**
 ```bash
-./setup.sh
-source .venv/bin/activate
-
-# Regenerate the diagrams
-cd 01_diagrams && python scripts/make_rg4_diagram.py && python scripts/make_process_diagrams.py && cd ..
-
-# View the finished deliverables — no setup needed, they're already built
-open 03_deliverable_documents/Genomic_Search_Project_Slides.pptx
-open 03_deliverable_documents/Genomic_Search_Summary_and_Corrections.docx
-
-# Run the full-dataset ANKH validation (needs internet — see its README first)
-cd 02_ankh_full_dataset_pipeline && cat README.md
+pip install -r requirements.txt
 ```
 
-## Status
+Or run `setup.sh` if you're on a Unix-like shell.
 
-Everything through the 6-candidate mismatch and the professor's two
-corrections (cosine similarity range; QuadRAtlas ≠ ANKH measurement type)
-is complete and reflected in `03_deliverable_documents/`. The full-dataset
-validation (`02_ankh_full_dataset_pipeline/`) is written and ready to run
-but has not yet been executed — it needs to run in an internet-connected
-environment (Colab or similar), not in the sandbox this project was
-assembled in. See `docs/PROJECT_LOG.md` section 6-7 for the full context.
+---
+
+## Methods & tools
+
+`Python` · ANKH protein language model · cosine similarity · pandas · QuadRAtlas dataset
+
+---
+
+## Notes
+
+This is a research project exploring an embedding-based approach to RG4BP discovery. Results are computational predictions and would need experimental validation. The raw database dump and embedding cache are excluded from the repo for size reasons; everything needed to reproduce them is described in the relevant folder READMEs.
