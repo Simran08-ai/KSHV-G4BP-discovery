@@ -1,0 +1,28 @@
+# Conda environment for the KSHV RG4 / RG4BP Discovery project
+# Create with:   conda env create -f environment.yml
+# Activate with: conda activate kshv-g4-discovery
+#
+# If you don't use conda, use `pip install -r requirements.txt` in a plain
+# venv instead (see README.md, Environment Setup section).
+
+name: kshv-g4-discovery
+channels:
+  - pytorch
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.10
+  - pip
+  - numpy>=1.24
+  - matplotlib>=3.7
+  - pandas>=2.0
+  - scikit-learn>=1.3
+  - scipy>=1.10
+  - requests>=2.31
+  - tqdm>=4.65
+  - pytorch>=2.0
+  - pip:
+      - transformers>=4.30
+      - sentencepiece>=0.1.99
+      - ankh>=1.10.0
+      - pdfplumber>=0.10

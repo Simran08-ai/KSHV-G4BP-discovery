@@ -1,0 +1,21 @@
+# Python dependencies for the KSHV RG4 / RG4BP Discovery project
+# Install with:  pip install -r requirements.txt
+# (use --break-system-packages if your Python is externally managed)
+
+# --- Diagram generation (01_diagrams/) ---
+matplotlib>=3.7
+numpy>=1.24
+
+# --- ANKH full-dataset pipeline (02_ankh_full_dataset_pipeline/) ---
+pandas>=2.0
+requests>=2.31
+torch>=2.0
+transformers>=4.30
+sentencepiece>=0.1.99
+scikit-learn>=1.3
+scipy>=1.10
+tqdm>=4.65
+ankh>=1.10.0          # official ANKH package; falls back to raw HuggingFace weights if unavailable
+
+# --- Reading / extracting the source PDF (optional, only needed if re-extracting) ---
+pdfplumber>=0.10
