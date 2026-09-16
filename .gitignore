@@ -1,0 +1,45 @@
+# ---- Large data files (kept local, re-generable) ----
+# Raw QuadRAtlas database dump
+*.sql
+# Cached ANKH embeddings
+ankh_embedding_cache.json
+*.embedding_cache.json
+# Full raw database table exports
+02_ankh_full_dataset_pipeline/data/tables/
+
+# ---- Source material (copyright) ----
+00_source_material/*.pdf
+GENOMIC_PROJECT_original.pdf
+
+# ---- Large / binary data formats ----
+*.parquet
+*.h5
+*.npy
+*.npz
+
+# ---- Python ----
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.eggs/
+build/
+dist/
+.venv/
+venv/
+env/
+.env
+
+# Jupyter
+.ipynb_checkpoints/
+
+# ---- Node (for the JS generators) ----
+node_modules/
+
+# ---- OS / editor junk ----
+.DS_Store
+Thumbs.db
+desktop.ini
+*.swp
+.idea/
+.vscode/
